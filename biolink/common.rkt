@@ -147,6 +147,10 @@
   (cond (dbs dbs)
         (else (load-databases #t)
               (unbox box:databases))))
+(define (load-databases-impl path)
+  (if (config-ref 'log-reads-stdout)
+    (wrap-logging-db "/dev/stdout" (make-db path))
+    (make-db path)))
 (define (load-databases verbose?)
   (define (load-dbs)
     (filter (lambda (desc) desc)
@@ -155,8 +159,8 @@
                    (cond ((directory-exists? path)
                           (when verbose? (printf "loading ~a\n" name))
                           (cons name (if verbose?
-                                       (time (make-db path))
-                                       (make-db path))))
+                                       (time (load-databases-impl path))
+                                       (load-databases-impl path))))
                          (else (when verbose?
                                  (printf "cannot load ~a; " name)
                                  (printf "directory missing: ~a\n" path))
