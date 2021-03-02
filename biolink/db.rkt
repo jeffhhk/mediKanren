@@ -238,9 +238,11 @@
         (write-dblog (lambda (x) (writeln x)))
         (writefn-dblog (lambda (tag fn)
           (lambda (db . args2)
-            (write-dblog `(
-              (event . ,tag)
-              (args . (,args2))))
+            (if (not (null? args2))
+              (write-dblog `(
+                (event . ,tag)
+                (args . (,args2))))
+              #f)
             (apply fn (cons db args2)))))
         (catid->cid* (writefn-dblog 'catid->cid* catid->cid*))
         (cid->concept (writefn-dblog 'cid->concept cid->concept))
