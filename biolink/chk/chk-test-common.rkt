@@ -3,7 +3,10 @@
 ; run as:
 ;   raco pkg install --batch --deps search-auto chk cover
 ;   cd biolink
-;   raco cover --verbose ./repr.rkt ./string-search.rkt ./db.rkt ./mk.rkt ./mk-db.rkt ./common.rkt ./test-common.rkt chk1/main.rkt
+;   # test without gathering coverage:
+;   raco test chk/chk-test-common.rkt
+;   # test and gather coverage:
+;   raco cover --verbose ./repr.rkt ./string-search.rkt ./db.rkt ./mk.rkt ./mk-db.rkt ./common.rkt ./test-common.rkt chk/chk-test-common.rkt
 
 (require chk)
 (require "../test-common.rkt")
