@@ -119,10 +119,37 @@
   (cond (cfg cfg)
         (else (load-config #t #f)
               (unbox box:config))))
-(define (config-ref key)
+(define (envvar-string-ref key)
+  (let
+    ((v (environment-variables-ref
+      (current-environment-variables) (string->bytes/utf-8 key))))
+    (if (not v)
+      #f
+      (bytes->string/utf-8 v))))
+; Catch configuration file keys that may be useful to override using environment
+; variables and provide a shell-friendly string representation.
+; Prefix keys with mk_ to prevent unintended collisions.
+(define (config-env-ref key)
+  (cond
+    ((equal? key 'databases)
+      (let* ((ekey (format "mk_~a" key))
+            (ev (envvar-string-ref ekey)))
+        (if (not ev)
+          #f
+          (let ((dbnames (string-split ev ",")))
+            (map string->symbol dbnames)))))
+    (else #f)
+  ))
+(define (config-file-ref key)
   (define kv (assoc key (config)))
   (unless kv (error "missing configuration key:" key))
   (cdr kv))
+(define (config-ref key)
+  (let ((v-env (config-env-ref key)))
+    (if v-env
+      v-env
+      (config-file-ref key)
+    )))
 (define (load-config verbose? path:config)
   (define path:config.user     (or path:config (path/root "config.scm")))
   (define path:config.defaults (path/root "config.defaults.scm"))
