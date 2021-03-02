@@ -48,6 +48,8 @@ name-file.node-props.scm
 (define input-edges
   (open-input-file (format "~a/~a" directory-path edges-file)))
 
+; JH:
+; nodes-file: unbound identifier
 (define input-nodes
   (open-input-file (format "~a/~a" directory-path nodes-file)))
 
