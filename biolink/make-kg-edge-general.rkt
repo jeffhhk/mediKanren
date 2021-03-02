@@ -15,6 +15,18 @@ name-file.edge-props.scm
   ;; "data/textminingprovider/"
   "data/sri_semmeddb/"
   )
+  
+; JH: Unclear if I have data like this.  What I have 2021-02-23:
+; ls biolink/data/*/*.tsv
+;   biolink/data/covid19/covid19.edgeprop.tsv
+;   biolink/data/covid19/covid19.edge.tsv
+;   biolink/data/covid19/covid19.nodeprop.tsv
+;   biolink/data/covid19/covid19.node.tsv
+;   biolink/data/covid19/merged-kg_edges.tsv
+;   biolink/data/covid19/merged-kg_nodes.tsv
+;   biolink/data/sri_semmeddb/sri_semmeddb.edgeprop.tsv
+;   biolink/data/sri_semmeddb/sri_semmeddb.edge.tsv
+
 (define edges-file
   ;; "sample-craft-edges.v0.1.kgx.tsv"
   "semmeddb_edges.tsv"
