@@ -1,6 +1,7 @@
 #lang racket
 (provide 
     logsamp-sample
+    logsamp-reset
     the-logsamp
 )
 
@@ -57,10 +58,15 @@
             ))))
 
 ; A collection of log writers organized by key evid.
-(struct logsamp (evsamp-from-evid))
+(struct logsamp (
+    (evsamp-from-evid #:mutable)
+))
 
 (define (make-logsamp)
     (logsamp (make-hash)))
+
+(define (logsamp-reset-impl logsamp)
+    (set-logsamp-evsamp-from-evid! (make-hash)))
 
 (define (ensure-evsamp logsamp evid dt)
     (let* ((evsamp-from-evid (logsamp-evsamp-from-evid logsamp)))
@@ -80,6 +86,9 @@
     (let* ((evsamp (ensure-evsamp logsamp evid dt)))
         (evsamp-sample evsamp x)
     ))
+
+(define (logsamp-reset logsamp)
+    (logsamp-reset-impl logsamp))
 
 ; TODO?: use racket singleton
 (define the-logsamp (make-logsamp))
