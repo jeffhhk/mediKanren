@@ -8,32 +8,50 @@
 ; dt-expected has elapsed.
 (struct evsamp (
     evid
-    (t-next #:mutable)
+    (num-to-wait #:mutable)
+    (num-to-wait-prev #:mutable)
+    (t-prev #:mutable)
     dt-expected))
 
-(define (calc-t-next dt-expected t)
+(define (calc-num-to-wait evsamp t)
     (let* (
-        (dt (* dt-expected (+ 0.5 (random))))
-        )
-        (+ t dt)))
+            (dt (- t (evsamp-t-prev evsamp)))
+            (rate (/ (evsamp-num-to-wait-prev evsamp) (+ dt 0.001)))
+            (r (+ 0.5 (random)))
+            (num-to-wait (* r rate (evsamp-dt-expected evsamp))))
+;        (displayln (format "t=~a dt=~a r=~a num-to-wait=~a" t dt r num-to-wait))
+        (exact-round num-to-wait)))
 
 (define (make-evsamp evid dt-expected)
-    (let* (
-        (t (current-inexact-milliseconds))
-        (t-next (calc-t-next dt-expected t))
-        )
-        (evsamp evid t-next dt-expected)
-    ))
+    (evsamp evid 0 1 (current-inexact-milliseconds) dt-expected)
+    )
 
 (define (evsamp-sample evsamp x)
-    (let* (
-            (t (current-inexact-milliseconds))
-            (dt-remaining (- (evsamp-t-next evsamp) t))
-            )
-        (if (> dt-remaining 0.0)
+    (if (> (evsamp-num-to-wait evsamp) 0)
+        (begin
+            (set-evsamp-num-to-wait! evsamp (- (evsamp-num-to-wait evsamp) 1))
             x
+        )
+        (let* (
+                (t (current-inexact-milliseconds))
+                ; current-inexact-milliseconds is the most expensive operation.
+                ; Compared with asking for the time on every evsamp-sample, 
+                ; rearranging our computation to only ask for the time when
+                ; we have decided to emit a message is a performance increase
+                ; of around 11x.
+                ;
+                ; use case measured:
+                ;   db.rkt:
+                ;     (for/vector ((x name-index)) (logsamp-sample the-logsamp "name-index-item" 2000 x))
+                ;   main.rkt:
+                ;     (require "common.rkt")
+                ;     (load-databases #t)
+                ;   configure to load covid19 database
+                (num-to-wait (calc-num-to-wait evsamp t)))
             (begin
-                (set-evsamp-t-next! evsamp (calc-t-next (evsamp-dt-expected evsamp) t))
+                (set-evsamp-num-to-wait! evsamp num-to-wait)
+                (set-evsamp-num-to-wait-prev! evsamp num-to-wait)
+                (set-evsamp-t-prev! evsamp t)
                 (displayln `((event . ,(string-append "logsamp_" (evsamp-evid evsamp))) (x . ,x)))
                 x
             ))))
