@@ -3,9 +3,6 @@
   (all-from-out "mk.rkt")
   (all-from-out "mk-db.rkt")
 
-  membero
-  edgeo
-  ~name-concepto
 
   rtx)
 
