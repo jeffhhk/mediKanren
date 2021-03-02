@@ -12,7 +12,7 @@
     "MONDO:0016196"
     "MONDO:0016187"))
 
-(define CHEBI--negatively-regulates-->PR-->MONDO
+(define (CHEBI--negatively-regulates-->PR-->MONDO)
   (curies/query
    (time (query/graph
           ((Drug #f)
@@ -32,7 +32,7 @@
           (PR PR->Disease Disease)))
    'Drug))
 
-(define CHEBI--postively-regulates-->PR-->MONDO
+(define (CHEBI--postively-regulates-->PR-->MONDO)
   (curies/query
    (time (query/graph
           ((Drug #f)
@@ -51,6 +51,6 @@
    'Drug))
 
 (module+ main
-  (displayln (format "CHEBI--negatively-regulates-->PR-->MONDO=~a" CHEBI--negatively-regulates-->PR-->MONDO))
-  (displayln (format "CHEBI--postively-regulates-->PR-->MONDO=~a" CHEBI--postively-regulates-->PR-->MONDO))
+  (displayln (format "CHEBI--negatively-regulates-->PR-->MONDO=~a" (CHEBI--negatively-regulates-->PR-->MONDO)))
+  (displayln (format "CHEBI--postively-regulates-->PR-->MONDO=~a" (CHEBI--postively-regulates-->PR-->MONDO)))
 )
