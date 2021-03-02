@@ -12,6 +12,7 @@
     (num-to-wait #:mutable)
     (num-to-wait-prev #:mutable)
     (t-prev #:mutable)
+    (num-total #:mutable)
     dt-expected))
 
 (define (calc-num-to-wait evsamp t)
@@ -24,10 +25,11 @@
         (exact-round num-to-wait)))
 
 (define (make-evsamp evid dt-expected)
-    (evsamp evid 0 1 (current-inexact-milliseconds) dt-expected)
+    (evsamp evid 0 1 (current-inexact-milliseconds) 0 dt-expected)
     )
 
 (define (evsamp-sample evsamp x)
+    (set-evsamp-num-total! evsamp (+ 1 (evsamp-num-total evsamp)))
     (if (> (evsamp-num-to-wait evsamp) 0)
         (begin
             (set-evsamp-num-to-wait! evsamp (- (evsamp-num-to-wait evsamp) 1))
@@ -48,12 +50,13 @@
                 ;     (require "common.rkt")
                 ;     (load-databases #t)
                 ;   configure to load covid19 database
-                (num-to-wait (calc-num-to-wait evsamp t)))
+                (num-to-wait (calc-num-to-wait evsamp t))
+                (num-total (evsamp-num-total evsamp)))
             (begin
                 (set-evsamp-num-to-wait! evsamp num-to-wait)
                 (set-evsamp-num-to-wait-prev! evsamp num-to-wait)
                 (set-evsamp-t-prev! evsamp t)
-                (displayln `((event . ,(string-append "logsamp_" (evsamp-evid evsamp))) (x . ,x)))
+                (displayln `((event . ,(string-append "logsamp_" (evsamp-evid evsamp))) (n . ,num-total) (x . ,x)))
                 x
             ))))
 
