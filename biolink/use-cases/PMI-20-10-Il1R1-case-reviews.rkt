@@ -17,7 +17,7 @@
 
 
 ;; First, load all data sources into RAM
-(require "query.rkt" "Thi-useful-functions.rkt")
+(require "../pieces-parts/query.rkt" "../pieces-parts/Thi-useful-functions.rkt")
                        
 ;; Find IL1R1 gene CURIE by looking up the identifiers in the GeneCards database
 (define IL-1R1 "HGNC:5993")
