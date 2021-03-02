@@ -28,6 +28,12 @@
     (evsamp evid 0 1 (current-inexact-milliseconds) 0 dt-expected)
     )
 
+(define (emit-sample evsamp x)
+    (displayln `(
+        (event . ,(string-append "logsamp_" (evsamp-evid evsamp))) 
+        (n . ,(evsamp-num-total evsamp)) 
+        (x . ,x))))
+
 (define (evsamp-sample evsamp x)
     (set-evsamp-num-total! evsamp (+ 1 (evsamp-num-total evsamp)))
     (if (> (evsamp-num-to-wait evsamp) 0)
@@ -50,13 +56,12 @@
                 ;     (require "common.rkt")
                 ;     (load-databases #t)
                 ;   configure to load covid19 database
-                (num-to-wait (calc-num-to-wait evsamp t))
-                (num-total (evsamp-num-total evsamp)))
+                (num-to-wait (calc-num-to-wait evsamp t)))
             (begin
                 (set-evsamp-num-to-wait! evsamp num-to-wait)
                 (set-evsamp-num-to-wait-prev! evsamp num-to-wait)
                 (set-evsamp-t-prev! evsamp t)
-                (displayln `((event . ,(string-append "logsamp_" (evsamp-evid evsamp))) (n . ,num-total) (x . ,x)))
+                (emit-sample evsamp x)
                 x
             ))))
 
