@@ -311,7 +311,7 @@
 ; could be threaded monadically, which could be faster or slower.
 (define unify
   (lambda (u v s)
-    (incr-counter _num-unify)
+    (incr-counter _num-mk-unify)
     (let ((u (walk u s))
           (v (walk v s)))
       (cond
@@ -329,7 +329,7 @@
 
 (define unify*
   (lambda (S+ S)
-    (incr-counter _num-unify*)
+    (incr-counter _num-mk-unify*)
     (unify (map lhs S+) (map rhs S+) S)))
 
 
@@ -398,7 +398,7 @@
 ; answer produced by c-inf is enough to satisfy the query.
 (define mplus
   (lambda (c-inf f)
-    (incr-counter _num-mplus)
+    (incr-counter _num-mk-mplus)
     (case-inf c-inf
       (() (f))
       ((f^) (inc (mplus (f) f^)))
@@ -410,7 +410,7 @@
 ; -> SearchStream
 (define bind
   (lambda (c-inf g)
-    (incr-counter _num-bind)
+    (incr-counter _num-mk-bind)
     (case-inf c-inf
       (() (mzero))
       ((f) (inc (bind (f) g)))
