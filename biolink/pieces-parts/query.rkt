@@ -395,6 +395,7 @@
 
 (load-databases #t)
 
+(define ((edge/db? db) e) (eq? db (car e)))
 
 ;;;; RHOBTB2 Queries
 
