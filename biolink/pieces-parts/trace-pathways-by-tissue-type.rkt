@@ -1,5 +1,6 @@
 #lang racket
 (require "query.rkt")
+(provide (all-defined-out))
 
 (define gene-list (list->set '("ENSEMBL:ENSG00000167972"
                                "ENSEMBL:ENSG00000198691"
@@ -658,8 +659,9 @@ returns: a list of the hash tables in this order: go-processes, go-process-membe
    )
   (list go-processes go-process-members cell-expression-hash regulated-genes-cell-expression-hash)
   )
-#|Examples
+;Examples
 (define ards-pos-reg (count-downstream uniprots '("positively_regulates")))
+#|Examples
 (define ards-neg-reg (count-downstream uniprots '("negatively_regulates")))
 (define ards-subclass_of (count-downstream uniprots '("subclass_of")))
 (define ards-all-regulation (count-downstream uniprots '("positively_regulates" "negatively_regulates" "subclass_of")))
