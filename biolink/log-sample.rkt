@@ -13,7 +13,8 @@
     (num-to-wait-prev #:mutable)
     (t-prev #:mutable)
     (num-total #:mutable)
-    dt-expected))
+    dt-expected
+    (is-warmup #:mutable)))
 
 (define (calc-num-to-wait evsamp t)
     (let* (
@@ -24,8 +25,8 @@
 ;        (displayln (format "t=~a dt=~a r=~a num-to-wait=~a" t dt r num-to-wait))
         (exact-round num-to-wait)))
 
-(define (make-evsamp evid dt-expected)
-    (evsamp evid 0 1 (current-inexact-milliseconds) 0 dt-expected)
+(define (make-evsamp evid dt-expected num-warmup)
+    (evsamp evid num-warmup num-warmup (current-inexact-milliseconds) 0 dt-expected #t)
     )
 
 (define (emit-sample evsamp x)
@@ -39,6 +40,9 @@
     (if (> (evsamp-num-to-wait evsamp) 0)
         (begin
             (set-evsamp-num-to-wait! evsamp (- (evsamp-num-to-wait evsamp) 1))
+            (if (evsamp-is-warmup evsamp)
+                (emit-sample evsamp x)
+                #f)
             x
         )
         (let* (
@@ -62,6 +66,9 @@
                 (set-evsamp-num-to-wait-prev! evsamp num-to-wait)
                 (set-evsamp-t-prev! evsamp t)
                 (emit-sample evsamp x)
+                (if (evsamp-is-warmup evsamp)
+                    (set-evsamp-is-warmup! evsamp #f)
+                    #f)
                 x
             ))))
 
@@ -76,9 +83,9 @@
 (define (logsamp-reset-impl logsamp)
     (set-logsamp-evsamp-from-evid! (make-hash)))
 
-(define (ensure-evsamp logsamp evid dt)
+(define (ensure-evsamp logsamp evid dt num-warmup)
     (let* ((evsamp-from-evid (logsamp-evsamp-from-evid logsamp)))
-        (hash-ref! evsamp-from-evid evid (lambda () (make-evsamp evid dt)))
+        (hash-ref! evsamp-from-evid evid (lambda () (make-evsamp evid dt num-warmup)))
     ))
 
 ; *** Begin provided API ***
@@ -89,9 +96,10 @@
         logsamp    ; instance
         evid       ; event type
         dt         ; minimum average time (in ms) between events of the same evid
+        #:num-warmup (num-warmup 1) ; number of samples to display before sampling
         x          ; datum to sample
         )
-    (let* ((evsamp (ensure-evsamp logsamp evid dt)))
+    (let* ((evsamp (ensure-evsamp logsamp evid dt num-warmup)))
         (evsamp-sample evsamp x)
     ))
 
