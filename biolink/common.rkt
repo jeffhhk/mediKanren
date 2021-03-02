@@ -99,7 +99,6 @@
   racket/port
   racket/set
   racket/stream
-  data/maybe  ; raco pkg install functional-lib
   racket/string)
 
 (define (keep n xs)
@@ -136,10 +135,10 @@
       (let* ((ekey (format "mk_~a" key))
             (ev (envvar-string-ref ekey)))
         (if (not ev)
-          nothing
+          '()
           (let ((dbnames (string-split ev ",")))
-            (just (map string->symbol dbnames))))))
-    (else nothing)
+            (list (map string->symbol dbnames))))))
+    (else '())
   ))
 (define (config-file-ref key fundefault)
   (define kv (assoc key (config)))
@@ -147,7 +146,7 @@
   (cdr kv))
 (define (config-ref key (fundefault (lambda () (error "missing configuration key:" key))))
   (match (config-env-ref key)
-    ((just v) v)
+    ((list v) v)
     (else (config-file-ref key fundefault))
     ))
 (define (load-config verbose? path:config)
