@@ -510,7 +510,27 @@
          gene=>drug-epilepsy-drug-results-RNA-up
          gene=>drug-epilepsy-drug-results-RNA-down)))
 
-; sort them by the values:
-(define strategy3_results-count (get-num-values (car strategy3_results)))
-(define strategy3_results-genes-count (get-num-values (car strategy3_genes_results)))
+; ; JH: currently fails:
+; ; sort them by the values:
+; (define strategy3_results-count (get-num-values (car strategy3_results)))
+
+; ; JH: fails as follows:
+; (car strategy3_results)
+;     '(("CHEBI:16469" . "17beta-estradiol")
+;       ("ENSEMBL:ENSG00000112964" . "GHR")
+;       ("ENSEMBL:ENSG00000211448" . "DIO2")
+;       ("ENSEMBL:ENSG00000013588" . "GPRC5A")
+;       ("ENSEMBL:ENSG00000178568" . "ERBB4"))
+; (get-num-values (car strategy3_results))
+;     ; length: contract violation
+;     ;   expected: list?
+;     ;   given: "17beta-estradiol"
+;     ; [,bt for context]
+
+; ; JH: gen-num-values says:
+; ;;; get-num-values takes a hash-table and count how many values are for each key:
+; (define (get-num-values hash-table)
+;   (map (lambda (x) (cons (car x) (length (cdr x)))) hash-table))
+
+; (define strategy3_results-genes-count (get-num-values (car strategy3_genes_results)))
 
