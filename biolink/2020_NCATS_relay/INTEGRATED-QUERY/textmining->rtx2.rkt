@@ -50,3 +50,7 @@
           (PR PR->Disease Disease)))
    'Drug))
 
+(module+ main
+  (displayln (format "CHEBI--negatively-regulates-->PR-->MONDO=~a" CHEBI--negatively-regulates-->PR-->MONDO))
+  (displayln (format "CHEBI--postively-regulates-->PR-->MONDO=~a" CHEBI--postively-regulates-->PR-->MONDO))
+)
