@@ -2,7 +2,7 @@
 (provide (all-defined-out))
 
 ; configuration
-(define num-to-skip 50000)
+(define num-to-skip 1000000)
 
 ; state
 (define _num-mk-unify (box 0))
