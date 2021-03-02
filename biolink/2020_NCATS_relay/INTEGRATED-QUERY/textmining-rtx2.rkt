@@ -32,6 +32,22 @@
           (PR PR->Disease Disease)))
    'Drug))
 
+(define (res1) (query/graph
+          ((Drug #f)
+           (PR #f)
+           (Disease "MONDO:0016147")
+           )
+          ((Drug->PR (list "biolink:negatively_regulates_entity_to_entity") #;(edge/db? 'textminingprovider))
+           (PR->Disease
+            (list
+             "gene_mapped_to_disease"
+             "gene_involved_in_pathogenesis_of_disease"
+             "gene_associated_with_disease"
+             "associated_with_disease"
+             "INVERTED:disease_has_basis_in_dysfunction_of") #;(edge/db? 'rtx2_2020_09_16)))
+          (Drug Drug->PR PR)
+          (PR PR->Disease Disease)))
+
 (define (CHEBI--postively-regulates-->PR-->MONDO)
   (curies/query
    (time (query/graph
@@ -46,7 +62,7 @@
              "gene_associated_with_disease"
              "associated_with_disease"
              "INVERTED:disease_has_basis_in_dysfunction_of") (edge/db? 'rtx2_2020_09_16)))
-          (Drug Drug->PR PR)               
+          (Drug Drug->PR PR)
           (PR PR->Disease Disease)))
    'Drug))
 
