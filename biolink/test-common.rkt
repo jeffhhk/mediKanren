@@ -60,18 +60,25 @@
       ;; (S S->X X)
       )))
 
-(displayln "concepts by name:")
-(pretty-print name=>concepts)
-(newline)
-(displayln "edges by name:")
-(pretty-print name=>edges)
-(newline)
+(define (run1)
+  (displayln "!!!run1")
+  (displayln "concepts by name:")
+  (pretty-print name=>concepts)
+  (newline)
+  (displayln "edges by name:")
+  (pretty-print name=>edges)
+  (newline)
+)
 
 (define (summary name=>xs)
   (hash-map name=>xs (lambda (name xs) (cons name (length xs)))))
+
+(define (run2)
+(displayln "!!!run2")
 (displayln "summary:")
 (pretty-print `((concepts: . ,(summary name=>concepts))
                 (edges:    . ,(summary name=>edges))))
+                )
 
 
 ;; Old testing of find-Xs
@@ -123,3 +130,15 @@
   (newline)
   (displayln 'O-edges:)
   (pretty-print (caddr x-bcr)))
+
+; To run coverage reports with chk and cover, we need to be able to run the code
+; outside of a "require".
+;
+; As this file stands, running chk runs this file twice, once during require and once
+; during a test.
+;
+; If we need to be able to run code like test-common.scm outside of chk, then
+; we should move these runs to a separate file.  If we don't need to run
+; outside of chk, we can just remove the calls below.
+(run1)
+(run2)
