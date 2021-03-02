@@ -3,6 +3,7 @@
          concept/any concept/category concept/curie-filter concept/curie
          edge/predicate edge/predicate/filter run!)
 (require "synonymize.rkt"
+         "../metrics.rkt"
          racket/function racket/list (except-in racket/match ==) racket/set)
 
 ;; Simple OO
@@ -275,6 +276,7 @@
     (list subject)
     (thunk (concept-cost (subject 'ref)))
     (thunk
+      (incr-counter _num-pr-subj-update)
      #|
       (displayln `(running subject update: ,(concept-cost (subject 'ref))
                            ,(car (subject 'ref))
@@ -285,6 +287,7 @@
     (list object)
     (thunk (concept-cost (object 'ref)))
     (thunk
+      (incr-counter _num-pr-obj-update)
      #|
       (displayln `(running object update: ,(concept-cost (object 'ref))
                            ,(car (object 'ref))
@@ -295,6 +298,7 @@
     (list edge)
     (thunk (edge-cost (edge 'ref)))
     (thunk
+      (incr-counter _num-pr-edge-update)
      #|
       (displayln `(running edge update: ,(edge-cost (edge 'ref))
                            ,(car (edge 'ref))))

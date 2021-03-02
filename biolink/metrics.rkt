@@ -9,6 +9,11 @@
 (define _num-mk-unify* (box 0))
 (define _num-mk-mplus (box 0))
 (define _num-mk-bind (box 0))
+
+(define _num-pr-subj-update (box 0))
+(define _num-pr-obj-update (box 0))
+(define _num-pr-edge-update (box 0))
+
 (define _num-total (box 0))
 (define _num-until-print (box num-to-skip))
 
@@ -19,6 +24,9 @@
         (mk-unify* . ,(unbox _num-mk-unify*))
         (mk-mplus . ,(unbox _num-mk-mplus))
         (mk-bind . ,(unbox _num-mk-bind))
+        (pr-subj-update . ,(unbox _num-pr-subj-update))
+        (pr-obj-update . ,(unbox _num-pr-obj-update))
+        (pr-edge-update . ,(unbox _num-pr-edge-update))
         (total . ,(unbox _num-total))
     ))
 
