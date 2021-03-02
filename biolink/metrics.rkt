@@ -10,7 +10,7 @@
 (define _num-mplus (box 0))
 (define _num-bind (box 0))
 (define _num-total (box 0))
-
+(define _num-until-print (box num-to-skip))
 
 ; api
 (define (get-counters)
@@ -24,8 +24,12 @@
 
 (define (check-emit)
     (set-box! _num-total (+ (unbox _num-total) 1))
-    (if (equal? 0 (modulo (+ (unbox _num-total) 1) num-to-skip))
-        (displayln (get-counters))
+    (set-box! _num-until-print (- (unbox _num-until-print) 1))
+    (if (<= (unbox _num-until-print) 0)
+        (begin
+            (set-box! _num-until-print num-to-skip)
+            (displayln (get-counters))
+        )
         #f))
 
 (define (incr-counter ctr)
