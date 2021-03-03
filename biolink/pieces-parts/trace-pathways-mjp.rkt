@@ -654,22 +654,22 @@ returns: sorted (high->low) assoc list of a count of the number of other protein
 (count-downstream uniprots '("positively_regulates"))
 
 
-(make-hash 'ARDS-Genelist
-           (make-hash 'Gene1-ARDS
-                      (make-hash 'Gene1-UBERON-cell-location
-                                 (make-hash 'pos-reg-GO1
-                                            (make-hash 'GO1
-                                                       (make-hash 'GO1-members
-                                                                  (make-hash 'GO1-member-UBERON-Cell-locations
-                                                                             (make 'GO1-ARDS-members)
-                                                                             )))))))
+; (make-hash 'ARDS-Genelist
+;            (make-hash 'Gene1-ARDS
+;                       (make-hash 'Gene1-UBERON-cell-location
+;                                  (make-hash 'pos-reg-GO1
+;                                             (make-hash 'GO1
+;                                                        (make-hash 'GO1-members
+;                                                                   (make-hash 'GO1-member-UBERON-Cell-locations
+;                                                                              (make 'GO1-ARDS-members)
+;                                                                              )))))))
 
 
 ;; which gene regulates the most amount of other genes on the list in a given tissue type
 ;; backtrace
 
 
-(define q2hop (query/graph
+(define q2hop-v2 (query/graph
                ((G "UniProtKB:P15692")
                 (M #f)
                 (X (lambda (c) (string-prefix? c "GO:")))
@@ -681,7 +681,7 @@ returns: sorted (high->low) assoc list of a count of the number of other protein
                (M M->X X)
                (rG rG->X X)))
 
-(define q2hop (query/graph
+(define q2hop-v3 (query/graph
                ((G "UniProtKB:P15692")
                 (M #f))
                ((G->M '("expressed_in")))
