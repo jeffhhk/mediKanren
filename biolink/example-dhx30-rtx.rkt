@@ -26,7 +26,6 @@
             (db:edgeo rtx edge)))))
 
 
-#|
 (displayln "categories:")
 (pretty-print (run* (c) (db:categoryo rtx c)))
 
@@ -49,9 +48,7 @@
 (newline)
 (displayln "fuzzy search DHX30:")
 (time (pretty-print (run* (c) (db:~name-concepto rtx "DHX30" c))))
-|#
 
-#|
 (newline)
 (displayln "X ANY-PRED DHX30:")
 (time (pretty-print (run* (edge)
@@ -73,4 +70,3 @@
                                    (,pid . ,pred) ,eprops) edge)
                         (db:~name-concepto rtx "DHX30" `(,scid . (,scui ,sname (,scatid . ,scat) . ,sprops)))
                         (db:edgeo rtx edge)))))
-|#
