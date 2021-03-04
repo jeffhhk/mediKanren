@@ -149,7 +149,7 @@
   (match (config-env-ref key)
     ((list v) v)
     (else (match (config-file-ref key)
-      ((list v) (list v))
+      ((list v) v)
       (_ (error "missing configuration key:" key))))
     ))
 (define (load-config verbose? path:config)
