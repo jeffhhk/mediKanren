@@ -73,7 +73,6 @@ CHEMBL.COMPUND:CHEMBL --indicated_for--> DOID:9477   rtx2
              handcrafted-thrombotic-events
              )))
 
-#|
 
 (define qb (time (query/graph
                   ((X #f)
@@ -114,4 +113,3 @@ CHEMBL.COMPUND:CHEMBL --indicated_for--> DOID:9477   rtx2
        pred]))
   (edges/query qb 'X->thrombotic-event)))
 
-|#
