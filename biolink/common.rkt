@@ -177,7 +177,7 @@
         (else (load-databases #t)
               (unbox box:databases))))
 (define (load-databases-impl path)
-  (if (config-ref 'log-reads-stdout)
+  (if (config-ref 'log-reads-stdout #f)
     (wrap-logging-db "/dev/stdout" (make-db path))
     (make-db path)))
 (define (load-databases verbose?)
