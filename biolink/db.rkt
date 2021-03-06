@@ -7,6 +7,12 @@
   db:predicate*
   db:concept-cui-corpus
 
+  (prefix-out testing: (combine-out
+    db:concept-cui-index
+    db:concept-name-corpus
+    db:concept-name-index
+  ))
+
   db:catid->category
   db:pid->predicate
   db:catid->cid*
