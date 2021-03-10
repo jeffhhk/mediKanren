@@ -1,6 +1,9 @@
 #lang racket
 (require "query.rkt")
 
+; JH: breadcrumb extracted:
+;(write-breadcrumbs (breadcrumbs1 q2hop-v3) "data/breadcrumb3")
+
 (define gene-list (list->set '("ENSEMBL:ENSG00000167972"
                                "ENSEMBL:ENSG00000198691"
                                "ENSEMBL:ENSG00000175164"
@@ -651,7 +654,8 @@ returns: sorted (high->low) assoc list of a count of the number of other protein
                  )
   (sort-count counter)
   )
-(count-downstream uniprots '("positively_regulates"))
+; JH: I'm gathering results that successuflly get through query/graph.  Bypassing this slow call:
+;(count-downstream uniprots '("positively_regulates"))
 
 
 ; (make-hash 'ARDS-Genelist
