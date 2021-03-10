@@ -3,6 +3,10 @@
 (require "../../pieces-parts/query.rkt"
          racket/engine)
 
+;; JH: breadcrumb extracted:
+;;   (write-breadcrumbs (breadcrumbs1 (qA)) "data/breadcrumb4a")
+;;   (write-breadcrumbs (breadcrumbs1 (qB)) "data/breadcrumb4b")
+
 (define crosskg-mondo-disease-curies
   '("MONDO:0016192"
     "DOID:0050890"
