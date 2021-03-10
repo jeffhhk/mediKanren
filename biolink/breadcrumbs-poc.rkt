@@ -1,5 +1,5 @@
 #lang racket/base
-(require racket/set racket/string racket/pretty)
+(require racket/set racket/string racket/pretty racket/match)
 
 ; POC for capturing breadcrumbs from a query/graph
 ;
@@ -33,11 +33,21 @@
 ; 4) Confirm that the query can be reproduced by launching racket with only the repro1 database.  E.g.:
 ;   time (cd biolink && env mk_databases=repro1 racket)
 
+(define (every-other xs)
+  (define (iter xs zs)
+    (match xs
+      ((cons y1 (cons z1 xstail)) (iter xstail (cons z1 zs)))
+      (_ (reverse zs))))
+  (iter xs '()))
+
+;(every-other '(1 2 3 4 5))
+;'(2 4)
+
 (define (breadcrumbs1 query-graph-result)
     (let* (
             (from-edge (lambda (edge)
                 (cdr ((cdr (assoc edge (cdr query-graph-result))) 'force))))
-            (edges (map cadr (car query-graph-result)))) ; TODO: handle paths with multiple edges
+            (edges (append-map every-other (car query-graph-result))))
         (append-map from-edge edges)))
 
 (define (write-breadcrumbs bcs fnout)
