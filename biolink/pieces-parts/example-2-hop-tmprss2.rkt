@@ -1,3 +1,5 @@
+#lang racket
+(require "query.rkt")
 (displayln "\nRunning 2-hop tmprss2 down-up query with concept categories:")
 (define q1 (time (query/graph
                   ((X       drug)
