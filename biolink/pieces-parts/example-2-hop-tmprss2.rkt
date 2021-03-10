@@ -1,5 +1,9 @@
 #lang racket
 (require "query.rkt")
+
+;; JH: breadcrumb extracted:
+;;   (write-breadcrumbs (breadcrumbs1 q1) "data/breadcrumb2")
+
 (displayln "\nRunning 2-hop tmprss2 down-up query with concept categories:")
 (define q1 (time (query/graph
                   ((X       drug)
