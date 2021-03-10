@@ -53,7 +53,7 @@
 (define (write-breadcrumbs bcs fnout)
     (define fout (open-output-file fnout))
     (for ((bc bcs))
-        (displayln bc fout))
+        (writeln bc fout))
     (close-output-port fout))
 
 ; *** BEGIN MODIED FORK OF edges-to-csv.rkt ***
