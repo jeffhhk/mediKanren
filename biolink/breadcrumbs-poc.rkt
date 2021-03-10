@@ -1,5 +1,6 @@
 #lang racket/base
 (require racket/set racket/string racket/pretty racket/match)
+(require "./breadcrumb-writer.rkt")
 
 ; POC for capturing breadcrumbs from a query/graph
 ;
@@ -26,39 +27,14 @@
 
 ;
 ; 1) run a query/graph to produce res1
-; 2) (write-breadcrumbs (breadcrumbs1 res1) "data/edges.input.scm")
+; 2a) (require "./breadcrumb-writer.rkt")
+; 2b) (write-breadcrumbs (breadcrumbs1 res1) "data/edges.input.scm")
 ; 3) run indexing scripts as follows:
 ;   rm -f biolink/data/repro1/*.csv && (cd biolink && racket -l errortrace -u database-from-values.rkt data repro1 && racket csv-graph-to-db.rkt data repro1 && racket build-string-index.rkt data repro1)
 ; The directory biolink/data/repro1 will now contain a minimal database for reproducing res1 from query.
 ; 4) Confirm that the query can be reproduced by launching racket with only the repro1 database.  E.g.:
 ;   time (cd biolink && env mk_databases=repro1 racket)
 
-(define (every-other xs)
-  (define (iter xs zs)
-    (match xs
-      ((cons y1 (cons z1 xstail)) (iter xstail (cons z1 zs)))
-      (_ (reverse zs))))
-  (iter xs '()))
-
-;(every-other '(1 2 3 4 5))
-;'(2 4)
-
-(define (breadcrumbs1 query-graph-result)
-    (let* (
-            (from-edge (lambda (edge)
-                (cdr ((cdr (assoc edge (cdr query-graph-result))) 'force))))
-            (edges (append-map every-other (car query-graph-result))))
-        (append-map from-edge edges)))
-
-(define (write-breadcrumbs bcs reldir)
-    (if (not (directory-exists? reldir))
-      (make-directory reldir)
-      #f)
-    (define relfile (build-path reldir "edges.input.scm"))
-    (define fout (open-output-file relfile))
-    (for ((bc bcs))
-        (writeln bc fout))
-    (close-output-port fout))
 
 ; *** BEGIN MODIED FORK OF edges-to-csv.rkt ***
 (define argv (current-command-line-arguments))
