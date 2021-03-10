@@ -1,24 +1,27 @@
 #lang racket
 (require "query.rkt")
 
-
+(config-ref 'databases)
 ;; chemical->drug-filter functions take a chemical list and
 ;; return a list of chemicals that have drug-safe predicates (i.e, drugs)
 ;; In this function, I use a 2-hop query to get from CHEBI:  to a DRUGBANK:
 ;; so that I can assess if a particular chemical has any drug-safe predicates
 
+
+(define (q-chemical chemical)
+  (query/graph
+          ((C chemical)
+          (D #f)
+          (Disease #f))
+          ((C->D '("same_as"))
+          (D->Disease drug-safe))
+          (C C->D D)
+          (D D->Disease Disease)))
+
 (define (chemical->drug-filter chemical-list)
   (filter 
    (lambda (chemical) 
-     (define q
-       (query/graph
-        ((C chemical)
-         (D #f)
-         (Disease #f))
-        ((C->D '("same_as"))
-         (D->Disease drug-safe))
-        (C C->D D)
-        (D D->Disease Disease)))
+     (define q (q-chemical chemical))
      (empty? (curies/query q 'D)))
    chemical-list))
 
