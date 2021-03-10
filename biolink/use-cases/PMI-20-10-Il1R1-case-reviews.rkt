@@ -16,6 +16,9 @@
 ;; phenotype. Therefore, in this case, we used mediKanren to find drugs that target IL1R and IL1R signaling pathway.
 
 
+;; JH: breadcrumb extracted
+;;   (write-breadcrumbs (breadcrumbs1 q-IL-1R1) "data/breadcrumb1")
+
 ;; First, load all data sources into RAM
 (require "../pieces-parts/query.rkt" "../pieces-parts/Thi-useful-functions.rkt")
                        
