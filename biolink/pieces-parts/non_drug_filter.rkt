@@ -747,22 +747,26 @@
 ;; For non-drugs categories, unfortunately, I haven't found a mediKanren's way to group them into these different
 ;; groups so I'll do this categorization manually.
 
+(define num-max 5)
+
+(define (take-some xs) (take xs num-max))
+
 (define strategy1-non-drugs (filter
                              (lambda (x)
                                (equal? (drug-info-for-curie x)
                                        (list '(tradenames) '(clinical-trials) '(indicated_for) '(contraindicated_for))))
-                             strategy1_chemicals))
+                             (take-some strategy1_chemicals)))
 (define strategy2-non-drugs (filter
                              (lambda (x)
                                (equal? (drug-info-for-curie x)
                                        (list '(tradenames) '(clinical-trials) '(indicated_for) '(contraindicated_for))))
-                             strategy2_chemicals))
+                             (take-some strategy2_chemicals)))
 
 (define strategy3-non-drugs (filter
                              (lambda (x)
                                (equal? (drug-info-for-curie x)
                                        (list '(tradenames) '(clinical-trials) '(indicated_for) '(contraindicated_for))))
-                             strategy3_chemicals))
+                             (take-some strategy3_chemicals)))
 
 (define strategy1-non-drugs-names (map car (map curie-synonyms/names strategy1-non-drugs)))
 (define strategy2-non-drugs-names (map car (map curie-synonyms/names strategy2-non-drugs)))
@@ -774,19 +778,19 @@
  (lambda (x)
    (not (equal? (drug-info-for-curie x)
                 (list '(tradenames) '(clinical-trials) '(indicated_for) '(contraindicated_for)))))
- strategy1_chemicals))
+ (take-some strategy1_chemicals)))
 
 (define strategy2-drugs (filter
  (lambda (x)
    (not (equal? (drug-info-for-curie x)
                 (list '(tradenames) '(clinical-trials) '(indicated_for) '(contraindicated_for)))))
- strategy2_chemicals))
+ (take-some strategy2_chemicals)))
 
 (define strategy3-drugs (filter
  (lambda (x)
    (not (equal? (drug-info-for-curie x)
                 (list '(tradenames) '(clinical-trials) '(indicated_for) '(contraindicated_for)))))
- strategy3_chemicals))
+ (take-some strategy3_chemicals)))
 
 ;; Take a look at their names:
 (define strategy1-drugs-names (map car (map curie-synonyms/names strategy1-drugs)))
