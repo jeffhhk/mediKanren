@@ -1,3 +1,5 @@
+#lang racket
+(require "query.rkt")
 (displayln "\nRunning 2-hop rhobtb2 query with drug safety constraint:")
 (define q3 (time (query/graph
                   ((X       drug)
