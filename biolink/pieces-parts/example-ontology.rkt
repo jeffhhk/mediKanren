@@ -1,3 +1,5 @@
+#lang racket
+(require "ontology.rkt")
 ;; Expected outputs are block-commented after each expression.
 
 ;; find ancestors of "substance with phytoestrogen role" in OBO:GOCHE ontology:
