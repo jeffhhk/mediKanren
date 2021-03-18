@@ -138,6 +138,7 @@
   (close-input-port in-concept-cui-corpus)
   (define cui-index (port->string-keys in-concept-cui-index))
   (close-input-port in-concept-cui-index)
+  #|
   (displayln "* name-corpus:")
   (define name-corpus
     (time (for/vector ((x (port->stream-offset&values in-concept-name-corpus)))
@@ -145,7 +146,9 @@
   (close-input-port in-concept-name-corpus)
   (displayln "* name-index:")
   (define name-index (time (file->bytes (db-path fnin-concept-name-index))))
-
+  |#
+  (define name-corpus #f) ;(make-bytes 0)
+  (define name-index #f)
   (define catid=>cid* (make-vector (vector-length category*) #f))
   (for ((catid (in-range 0 (vector-length category*))))
        (define cid* (detail-ref in-concepts-by-category
