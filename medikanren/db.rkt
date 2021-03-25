@@ -25,6 +25,7 @@
   hist-cui
   hist-cui-size
   hash->stream
+  cache-metrics
 
   db:~category->catid&category*
   db:~predicate->pid&predicate*
@@ -221,6 +222,44 @@
           pmid->eid* pmid&eid*-stream subject->pids object->pids
           synonym->cid* xref->cid*
           get-cui-corpus))
+
+;; Estimate the impact would be of caching db:cui*->cids
+;;
+;; Example
+;;
+;; (cd medikanren && racket)
+;;     (require xrepl)
+;;     (require "db.rkt")
+;;     (require "common.rkt") (load-databases #t)
+;;     (time (enter! "../contrib/use-cases/PMI-20-10-Il1R1-case-reviews.rkt"))
+;;     ,top
+;;
+;; (cache-metrics hist-cui hist-cui-size)
+;; ;; Output:
+;;     '((num-fetches . 277255)
+;;       (num-unique-keys . 2666)
+;;       (cache-hit-rate . 0.990384303258733)
+;;       (total-value-size . 18077558)
+;;       (cache-ram-per-entry . 65.20191881120269)
+;;       (max-cache-ram-used . 173828.31555066636))
+
+(define (cache-metrics hist-cui hist-cui-size)
+        (define num-fetches (foldl + 0 (map cdr (stream->list (hash->stream hist-cui)))))
+        (define num-unique-keys (length (stream->list (hash->stream hist-cui))))
+        (define cache-hit-rate (- 1 (real->double-flonum (/ num-unique-keys num-fetches))))
+        (define total-value-size (foldl + 0 (map cdr (stream->list (hash->stream hist-cui-size)))))
+        (define cache-ram-per-entry (real->double-flonum (/ total-value-size num-fetches)))
+        (define max-cache-ram-used (* num-unique-keys cache-ram-per-entry))
+        `((num-fetches . ,num-fetches)
+          (num-unique-keys . ,num-unique-keys) ; If the cache were larger than this number
+                                               ; of slots, this app would not use them.
+          (cache-hit-rate . ,cache-hit-rate)
+          (total-value-size . ,total-value-size)
+          (cache-ram-per-entry . ,cache-ram-per-entry)
+          (max-cache-ram-used . ,max-cache-ram-used) ; If the cache were larger than
+                                                     ; approximately this number of bytes,
+                                                     ; the this app would not use them.
+          ))
 
 (require racket/dict)
 
