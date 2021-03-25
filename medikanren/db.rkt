@@ -22,6 +22,10 @@
   db:synonym->cid*
   db:xref->cid*
 
+  hist-cui
+  hist-cui-size
+  hash->stream
+
   db:~category->catid&category*
   db:~predicate->pid&predicate*
   db:~cui*->cid&concept*
@@ -122,6 +126,7 @@
     (list->vector (read-all-from-file (db-path fnin-predicates))))
 
   (define (get-cui-corpus/raw)
+    (printf "get-cui-corpus/raw\n")
     (call-with-input-file
       (db-path fnin-concept-cui-corpus)
       (lambda (in-concept-cui-corpus)
@@ -217,9 +222,48 @@
           synonym->cid* xref->cid*
           get-cui-corpus))
 
+(require racket/dict)
+
+(define (make-histogram) (make-hash))
+
+(define (histogram-inc hist k [v 1])
+  (hash-update! hist k (lambda (n) (+ n v)) 0))
+
+(define (histogram-count hist)
+  (hash-count hist))
+
+(define hist-cui (make-histogram))
+(define hist-cui-size (make-histogram))
+
+(define (hash->stream h)
+  (define (iter p)
+    (if p
+        (stream-cons
+         (let-values (((k v) (hash-iterate-key+value h p)))
+           (cons k v))
+         (iter (hash-iterate-next h p)))
+        empty-stream))
+  (iter (hash-iterate-first h)))
+
+(define (ramsize-via-write x)
+  (define f (open-output-bytes))
+  (write x f)
+  (close-output-port f)
+  (bytes-length (get-output-bytes f)))
+
 (define (db:category*             db)        (vector-ref db 0))
 (define (db:predicate*            db)        (vector-ref db 1))
-(define (db:cui*->cids            db   cui*) ((vector-ref db 2) cui*))
+(define (db:cui*->cids            db   cui*) 
+  (for ((cui cui*))
+    (let* (
+        (v ((vector-ref db 2) (list cui)))
+        (rsk (ramsize-via-write cui))
+        (rsv (ramsize-via-write v))
+        (rs (+ rsk rsv 40))  ; 5 pointers of 8 bytes each
+      )
+      (histogram-inc hist-cui-size cui rs))
+    (histogram-inc hist-cui cui))
+  ((vector-ref db 2) cui*))
 (define (db:~name*->cids          db ~name*) ((vector-ref db 3) ~name*))
 (define (db:catid->cid*           db . args) (apply (vector-ref db 4) args))
 (define (db:cid->concept          db . args) (apply (vector-ref db 5) args))
@@ -234,7 +278,10 @@
 (define (db:object->pids          db . args) (apply (vector-ref db 14) args))
 (define (db:synonym->cid*         db . args) (apply (vector-ref db 15) args))
 (define (db:xref->cid*            db . args) (apply (vector-ref db 16) args))
-(define (db:concept-cui-corpus    db)        ((vector-ref db 17)))
+(define (db:concept-cui-corpus    db)        
+  (printf "db:concept-cui-corpus\n")
+  (raise "claim refuted: db:concept-cui-corpus doesn't run")
+  ((vector-ref db 17)))
 
 (define (db:catid->category db catid) (vector-ref (db:category* db) catid))
 (define (db:pid->predicate db pid)    (vector-ref (db:predicate* db) pid))
