@@ -16,4 +16,9 @@ jobs:
           curl -X POST https://api.github.com/repos/jeffhhk/mediKanren-ops/dispatches \
           -H 'Accept: application/vnd.github.everest-preview+json' \
           -u ${{ secrets.GH_ACCESS_TOKEN }} \
-          --data '{"event_type": "ping", "client_payload": { "repository": "'"$GITHUB_REPOSITORY"'" }}'
+          --data '{"event_type": "ping", "client_payload": {
+              "repository": "'"$GITHUB_REPOSITORY"'",
+              "github_ref": "'$GITHUB_REF'",
+              "github_head_ref": "'$GITHUB_HEAD_REF'",
+              "github_base_ref": "'$GITHUB_BASE_REF'"
+              }}'
