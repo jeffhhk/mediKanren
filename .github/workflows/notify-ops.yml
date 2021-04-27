@@ -2,6 +2,7 @@ name: Notify ops repository
 
 on:
   push:
+  pull_request:
   repository_dispatch:
 
 jobs:
