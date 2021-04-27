@@ -1,4 +1,4 @@
-name: Notify ops repository
+name: Request 10GB-CI
 
 on:
   push:
@@ -6,14 +6,12 @@ on:
   repository_dispatch:
 
 jobs:
-  ping-pong:
+  10GB-CI:
     runs-on: ubuntu-latest
     steps:
-      - name: Event Information
+      - name: Request 10GB-CI
         run: |
           echo "Event '${{ github.event.action }}' received from '${{ github.event.client_payload.repository }}'"
-      - name: PING - Dispatch initiating repository event
-        run: |
           curl -X POST https://api.github.com/repos/jeffhhk/mediKanren-ops/dispatches \
           -H 'Accept: application/vnd.github.everest-preview+json' \
           -u ${{ secrets.GH_ACCESS_TOKEN }} \
