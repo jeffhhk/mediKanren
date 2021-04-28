@@ -3,7 +3,6 @@ name: Request 10GB-CI
 on:
   push:
   pull_request:
-  repository_dispatch:
 
 jobs:
   10GB-CI:
