@@ -16,6 +16,7 @@ jobs:
           -u ${{ secrets.GH_ACCESS_TOKEN }} \
           --data '{"event_type": "request-10GB-CI", "client_payload": {
               "repository": "'"$GITHUB_REPOSITORY"'",
+              "github_sha1": "'$GITHUB_SHA1'",
               "github_ref": "'$GITHUB_REF'",
               "github_head_ref": "'$GITHUB_HEAD_REF'",
               "github_base_ref": "'$GITHUB_BASE_REF'"
